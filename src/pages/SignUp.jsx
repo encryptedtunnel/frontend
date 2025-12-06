@@ -83,6 +83,9 @@ export default function SignUp() {
         {error && <p className="text-red-500 text-sm -mt-2">{error}</p>}
 
         <PrimaryButton type="submit">Create Account</PrimaryButton>
+        <p className="text-slate-600 dark:text-slate-400 text-base font-normal leading-normal  text-center">Already have
+        an account? <a class="font-bold text-primary hover:underline" href="/Login">Log In</a>
+        </p>
       </form>
     </main>
   );
