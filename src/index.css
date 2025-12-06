@@ -23,13 +23,13 @@ body {
 }
 
 .btn-primary {
-  @apply bg-primary text-white h-12 w-full rounded-[var(--radius-lg)] flex items-center justify-center font-semibold;
+  @apply bg-primary text-white h-12 w-full rounded-lg flex items-center justify-center font-semibold;
 }
 
 .btn-secondary {
-  @apply bg-bg-card text-white h-12 w-full rounded-[var(--radius-lg)] flex items-center justify-center font-semibold;
+  @apply bg-bg-card text-white h-12 w-full rounded-lg flex items-center justify-center font-semibold;
 }
 
 .card {
-  @apply bg-bg-card p-6 rounded-[var(--radius-lg)];
+  @apply bg-bg-card p-6 rounded-lg;
 }

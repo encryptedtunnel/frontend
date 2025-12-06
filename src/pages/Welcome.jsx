@@ -24,8 +24,8 @@ export default function Welcome() {
           <Link to="/signup">
            <PrimaryButton>Create Account</PrimaryButton>
           </Link>
-          <Link to="/signup">
-           <SecondaryButton>Log In</SecondaryButton>
+          <Link to="/login">
+          <SecondaryButton>Log In</SecondaryButton>
           </Link>
         </div>
 

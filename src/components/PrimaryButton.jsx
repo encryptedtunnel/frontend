@@ -1,5 +1,3 @@
-import React, { Children } from 'react'
-
 export default function PrimaryButton({ children, ...props }) {
   return (
     <button
