@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Logo from "../components/Logo";
 import InputField from "../components/InputField";
 import PasswordField from "../components/PasswordField";
 import PrimaryButton from "../components/PrimaryButton";
 
 export default function SignUp() {
+  const navigate= useNavigate();
   const [form, setForm] = useState({
     fullName: "",
     username: "",
@@ -33,6 +35,7 @@ export default function SignUp() {
     e.preventDefault();
     if (error) return;
     console.log(form);
+    navigate("/Inbox");
   };
 
   return (
