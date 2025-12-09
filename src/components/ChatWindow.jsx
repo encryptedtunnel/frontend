@@ -21,7 +21,7 @@ export default function ChatWindow({ chat, onBack }) {
   return (
     <div className="flex flex-col h-full w-full bg-bg-dark text-white overflow-x-hidden">
 
-      <header className="flex items-center gap-3 px-4 py-3 border-b border-white/10 bg-bg-dark sticky top-0 z-10 w-full">
+      <header className="h-16 flex items-center gap-3 px-4 py-4 border-b border-white/10 bg-bg-dark sticky top-0 z-10 w-full">
         <button
           className="md:hidden text-primary flex items-center gap-1"
           onClick={onBack}
@@ -30,7 +30,7 @@ export default function ChatWindow({ chat, onBack }) {
           <span>Back</span>
         </button>
 
-        <h1 className="text-lg font-bold truncate">{chat.name}</h1>
+        <h1 className="text-xl font-bold truncate">{chat.name}</h1>
       </header>
 
       <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 flex flex-col gap-4 min-h-0 max-w-full">

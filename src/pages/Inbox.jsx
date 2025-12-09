@@ -65,11 +65,11 @@ export default function Inbox() {
         `}
       >
 
-        <div className="p-4 border-b border-white/10">
+        <div className="p-4 h-16 border-b border-white/10">
           <h1 className="text-2xl font-bold">Chats</h1>
         </div>
 
-        <div className="overflow-y-auto h-[calc(100vh-72px)] px-3 py-4">
+        <div className="overflow-y-auto space-y-2 h-[calc(100vh-72px)] px-3 py-4">
           {chats.map((chat) => (
             <ChatListItem
               key={chat.id}
