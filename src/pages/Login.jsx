@@ -1,14 +1,14 @@
+import { z } from "zod";
+import axios from "axios";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ToastContainer, toast } from "react-toastify";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Logo from "../components/Logo";
+import authService from "../services/authService";
 import InputField from "../components/InputField";
 import PasswordField from "../components/PasswordField";
 import PrimaryButton from "../components/PrimaryButton";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { ToastContainer, toast } from "react-toastify";
-import axios from "axios";
-import authService from "../services/authService";
 
 const LoginSchema = z.object({
   username: z
@@ -22,7 +22,7 @@ export default function Login() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { isValid, errors }
   } = useForm({
     resolver: zodResolver(LoginSchema),
   });
@@ -41,8 +41,8 @@ export default function Login() {
     });
   };
   const onSubmit = async (data) => {
-    try {
-      await authService.login(data.username, data.password);
+    const result = await authService.login(data.username, data.password);
+    if (result.success) {
       toast("Signed in", { ...toastConfigError, type: "success" });
       const redirectUrl = searchParams.get("redirect");
       setTimeout(() => {
@@ -52,24 +52,11 @@ export default function Login() {
           nav("/inbox");
         }
       }, 2000);
-    } catch (err) {
-      if (axios.isAxiosError(err)) {
-        if (err.response) {
-          toast(err.response.data.detail, toastConfigError);
-        } else if (err.request) {
-          toast(
-            "Network error. Please check your connection.",
-            toastConfigError
-          );
-        } else {
-          toast("An unexpected error occurred.", toastConfigError);
-        }
-      } else {
-        console.error(err);
-        toast("An unexpected error occurred.", toastConfigError);
-      }
     }
-  };
+    else {
+      toast(result.message, toastConfigError)
+    };
+  }
   return (
     <main className="min-h-screen flex items-center justify-center bg-bg-dark p-6">
       <form
