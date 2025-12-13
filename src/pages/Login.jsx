@@ -1,29 +1,66 @@
-import { useState } from "react";
+import { z } from "zod";
+import axios from "axios";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ToastContainer, toast } from "react-toastify";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Logo from "../components/Logo";
+import authService from "../services/authService";
 import InputField from "../components/InputField";
 import PasswordField from "../components/PasswordField";
 import PrimaryButton from "../components/PrimaryButton";
-import { Link } from "react-router-dom";
+
+const LoginSchema = z.object({
+  username: z
+    .string()
+    .min(3, "Username must be at least 3 characters long")
+    .nonempty(),
+  password: z.string().min(6, "Password must be at least 6 characters long"),
+});
 
 export default function Login() {
-  const [form, setForm] = useState({
-    identifier: "",
-    password: "",
+  const {
+    register,
+    handleSubmit,
+    formState: { isValid, errors }
+  } = useForm({
+    resolver: zodResolver(LoginSchema),
   });
 
-  const onChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const nav = useNavigate();
+  const [searchParams] = useSearchParams();
+  const toastConfigError = {
+    position: "bottom-center",
+    theme: "dark",
+    type: "error",
   };
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    console.log("Login Data:", form);
+  const onError = (errors) => {
+    Object.values(errors).map((err) => {
+      toast(err.message, toastConfigError);
+    });
   };
-
+  const onSubmit = async (data) => {
+    const result = await authService.login(data.username, data.password);
+    if (result.success) {
+      toast("Signed in", { ...toastConfigError, type: "success" });
+      const redirectUrl = searchParams.get("redirect");
+      setTimeout(() => {
+        if (redirectUrl) {
+          nav(redirectUrl);
+        } else {
+          nav("/inbox");
+        }
+      }, 2000);
+    }
+    else {
+      toast(result.message, toastConfigError)
+    };
+  }
   return (
     <main className="min-h-screen flex items-center justify-center bg-bg-dark p-6">
-      <form 
-        onSubmit={onSubmit} 
+      <form
+        onSubmit={handleSubmit(onSubmit, onError)}
         className="w-full max-w-md flex flex-col gap-6"
       >
         <div className="flex justify-center mt-4 mb-2">
@@ -38,17 +75,13 @@ export default function Login() {
           label="Username"
           icon="person"
           placeholder="Enter your username"
-          name="identifier"
-          value={form.identifier}
-          onChange={onChange}
+          {...register("username")}
         />
 
         <PasswordField
           label="Password"
           placeholder="Enter your password"
-          name="password"
-          value={form.password}
-          onChange={onChange}
+          {...register("password")}
         />
 
         <PrimaryButton type="submit">Sign In</PrimaryButton>
@@ -60,6 +93,7 @@ export default function Login() {
           </Link>
         </p>
       </form>
+      <ToastContainer draggable />
     </main>
   );
 }
