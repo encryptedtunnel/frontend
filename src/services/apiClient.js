@@ -1,0 +1,20 @@
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  maxRedirects: 3,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Attach token to every request if it exists
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("access-token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+export default api;
