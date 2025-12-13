@@ -55,6 +55,8 @@ export default function Inbox() {
     nav("/inbox");
   };
 
+  console.log("Chats:",chats);
+
   return (
     <div className="flex h-screen bg-bg-dark text-white">
       <CheckAuth />
@@ -62,7 +64,7 @@ export default function Inbox() {
         className={`
           bg-bg-dark border-r border-white/10
           md:w-1/3 w-full
-          ${selectedChat ? "hidden md:block" : "block"}
+          ${chatId ? "hidden md:block" : "block"}
         `}
       >
 

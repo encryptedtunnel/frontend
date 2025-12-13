@@ -1,4 +1,3 @@
-// src/data/chats.js
 export const chats = [
   {
     id: 1,
@@ -26,6 +25,7 @@ export const chats = [
       { fromMe: false, text: "sdckl;sofjsope", time: "11:10 AM" },
       { fromMe: true, text: ";laosdk;slafkoseprfk;", time: "11:11 AM" },
       { fromMe: false, text: "lsxkds;aodp", time: "11:12 AM" },
+       { fromMe: false, text: "xjsmxlk", time: "09:20 AM" },
     ],
   },
 
@@ -39,6 +39,7 @@ export const chats = [
     messages: [
       { fromMe: false, text: "kjmK:Zdxjmslakidjsl", time: "09:20 AM" },
       { fromMe: true, text: "lkxjmaslkcdijlasop", time: "09:25 AM" },
+      { fromMe: false, text: "xjsmxlk", time: "09:30 AM" },
     ],
   },
 ];
