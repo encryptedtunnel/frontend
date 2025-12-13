@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { chats as mockChats } from "../data/chats";
 import ChatListItem from "../components/ChatListItem";
 import ChatWindow from "../components/ChatWindow";
+import CheckAuth from "../components/CheckAuth";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function Inbox() {
@@ -58,7 +59,7 @@ export default function Inbox() {
 
   return (
     <div className="flex h-screen bg-bg-dark text-white">
-
+      <CheckAuth />
       <aside
         className={`
           bg-bg-dark border-r border-white/10
