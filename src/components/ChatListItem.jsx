@@ -7,7 +7,7 @@ export default function ChatListItem({ chat, onClick, isActive = false }) {
     >
       <div className="flex-grow overflow-hidden">
         <div className="flex items-baseline justify-between">
-          <p className="truncate text-base font-semibold text-white">{chat.participant_username}</p>
+          <p className="truncate text-base font-semibold text-white">{chat.participant_display_name}</p>
           <p className="text-xs text-primary">{chat.last_message_time}</p>
         </div>
 

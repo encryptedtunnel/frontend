@@ -29,7 +29,7 @@ const ChatWindow = ({ conversation, setConversation }) => {
                             <span className="material-symbols-outlined">arrow_back_ios_new</span>
                             <span>Back</span>
                         </button>
-                        <h1 className="text-xl font-bold truncate">{conversation.participant_username}</h1>
+                        <h1 className="text-xl font-bold truncate">{conversation.participant_display_name}</h1>
                     </header>
 
                     <main className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
