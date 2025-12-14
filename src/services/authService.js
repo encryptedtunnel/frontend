@@ -168,6 +168,13 @@ class AuthService {
   getToken() {
     return localStorage.getItem(this.TOKEN_KEY);
   }
+  meo(){
+    const token = this.getToken();
+    if (!token) return false;
+
+    const decoded = this._decodeToken(token);
+    return decoded
+  }
 }
 
 export default new AuthService();

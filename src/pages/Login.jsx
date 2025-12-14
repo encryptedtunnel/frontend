@@ -49,7 +49,7 @@ export default function Login() {
         if (redirectUrl) {
           nav(redirectUrl);
         } else {
-          nav("/inbox");
+          nav("/dashboard");
         }
       }, 2000);
     }
