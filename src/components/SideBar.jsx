@@ -4,7 +4,6 @@ import ChatListItem from "../components/ChatListItem";
 
 const SideBar = ({activeChat, setActiveChat}) => {
     const { conversations, error, loading } = useConversations()
-    console.log(conversations)
     
     return <aside
         className={`

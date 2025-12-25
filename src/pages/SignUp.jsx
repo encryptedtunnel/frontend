@@ -50,7 +50,7 @@ export default function SignUp() {
   const onSubmit = async (data) => {
       const result = await authService.signup(data.username, data.display_name, data.password)
       if (result.success){
-        toast("Signed in", { ...toastConfig, type: "success" });
+        toast("Signed up", { ...toastConfig, type: "success" });
         setTimeout(() => { navigate("/login") }, 2000)
       } else{
         toast(result.message, toastConfig);
