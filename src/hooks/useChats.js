@@ -33,7 +33,7 @@ export const useChats = (conversationId, myId, encrypt, decrypt, ready) => {
   useEffect(() => {
     if (!conversationId || !myId || !ready) return;
     socketRef.current = new WebSocket(
-      `ws://127.0.0.1:8000/chat/ws/${conversationId}/${myId}`
+      `${import.meta.env.VITE_API_BASE_URL_WS}/chat/ws/${conversationId}/${myId}`
     );
 
     socketRef.current.onmessage = async (event) => {
