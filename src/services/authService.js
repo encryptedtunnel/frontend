@@ -119,12 +119,13 @@ class AuthService {
     return decoded.exp > now;
   }
 
-  async signup(username, display_name, password) {
+  async signup(username, display_name, password, pubKey) {
     try {
       const response = await apiClient.post("/auth/register", {
         username,
         display_name,
         password,
+        pubKey,
       });
 
       return {
@@ -158,6 +159,43 @@ class AuthService {
         message: data?.message || "An error occurred.",
         details: data,
       };
+    }
+  }
+  async fetchPK(username){
+    try {
+      const response = await apiClient.get(`/auth/user/${username}/pubKey`)
+      return {
+        success: true,
+        status: response.status,
+        data: response.data,
+      };
+    } catch (error) {
+      if (!error.response) {
+        return {
+          success: false,
+          status: null,
+          message: "Network error. Please check your connection.",
+        };
+      }
+
+      const { status, data } = error.response;
+
+      if (status === 404) {
+        return {
+          success: false,
+          status: 404,
+          message: "user not found",
+          details: data,
+        };
+      }
+
+      return {
+        success: false,
+        status,
+        message: data?.message || "An error occurred.",
+        details: data,
+      };
+
     }
   }
 
