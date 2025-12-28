@@ -23,7 +23,9 @@ const useEncryption = (participant_username) => {
 
   const decrypt = async (cipher) => {
 
-    if (!sharedKey){ throw Error("shared key")}
+    if (!sharedKey){ 
+      await setupSharedKey()
+    }
     return CryptoService.decryptMessage(sharedKey, cipher);
   };
   useEffect(() => {

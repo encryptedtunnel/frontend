@@ -6,6 +6,7 @@ export default function ChatListItem({ chat, onClick, isActive = false }) {
   const { decrypt, ready } = useEncryption(chat.participant_username)
   useEffect(() => {
     async function decryptLastMsg() {
+      if (!chat.last_message) return
       setMsg(await decrypt(JSON.parse(chat.last_message)))
     }
     decryptLastMsg()
