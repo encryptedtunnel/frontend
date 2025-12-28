@@ -21,7 +21,7 @@ const SideBar = ({activeChat, setActiveChat}) => {
                 <ChatListItem
                     key={c.id}
                     chat={c}
-                    isActive={activeChat.id === c.id}
+                    isActive={activeChat && activeChat.id === c.id}
                     onClick={() => setActiveChat(c)}
                 />
             ))}

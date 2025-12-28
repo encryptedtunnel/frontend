@@ -104,4 +104,4 @@ class CryptoService {
   }
 }
 
-export default  CryptoService
+export default CryptoService;
