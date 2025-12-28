@@ -1,36 +1,46 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import chatService from "../services/chatService";
 
-export const useChats = (conversationId, myId) => {
+export const useChats = (conversationId, myId, encrypt, decrypt, ready) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const socketRef = useRef(null);
-  // Fetch messages from API 
+  // Fetch messages from API
   const fetchMessages = useCallback(async () => {
     try {
-      if (!conversationId) return; 
+      if (!conversationId) return;
+      if (!ready) return;
       setLoading(true);
       const data = await chatService.listMessages(conversationId);
-      setMessages(data);
+
+      const decryptedMessages = await Promise.all(
+        data.map(async (msg) => {
+          const cipher = JSON.parse(msg.content);
+          const plaintext = await decrypt(cipher);
+          return { ...msg, content: plaintext };
+        })
+      );
+      setMessages(decryptedMessages);
     } catch (err) {
       setError(err.message || "Failed to load messages");
     } finally {
       setLoading(false);
     }
-  }, [conversationId]);
+  }, [conversationId, ready]);
 
   // Connect WebSocket
   useEffect(() => {
-    if (!conversationId || !myId) return;
-
+    if (!conversationId || !myId || !ready) return;
     socketRef.current = new WebSocket(
       `ws://127.0.0.1:8000/chat/ws/${conversationId}/${myId}`
     );
 
-    socketRef.current.onmessage = (event) => {
+    socketRef.current.onmessage = async (event) => {
       const newMessage = JSON.parse(event.data);
-      setMessages((prev) => [...prev, newMessage]);
+      console.log(JSON.parse(newMessage.content))
+      const plaintext = await decrypt(JSON.parse(newMessage.content));
+      setMessages((prev) => [...prev, {...newMessage, content: plaintext}]);
     };
 
     socketRef.current.onopen = () => console.log("WebSocket connected");
@@ -38,19 +48,19 @@ export const useChats = (conversationId, myId) => {
     socketRef.current.onclose = () => console.log("WebSocket closed");
 
     return () => socketRef.current?.close();
-  }, [conversationId, myId]);
+  }, [conversationId, myId, ready]);
 
-  const sendMessage = (content) => {
+  const sendMessage = async (content) => {
     if (!content.trim()) return;
     if (socketRef.current?.readyState === WebSocket.OPEN) {
-      socketRef.current.send(content);
+      const cipher = await encrypt(content);
+      socketRef.current.send(JSON.stringify(cipher));
     }
   };
-
   // Fetch initial messages once
   useEffect(() => {
     fetchMessages();
-  }, [fetchMessages]);
+  }, [fetchMessages, ready]);
 
   return { messages, loading, error, sendMessage, refetch: fetchMessages };
 };

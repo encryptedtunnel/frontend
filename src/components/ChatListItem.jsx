@@ -1,4 +1,16 @@
+import { useEffect, useState } from "react";
+import useEncryption from "../hooks/useEncryption";
+
 export default function ChatListItem({ chat, onClick, isActive = false }) {
+  const [msg, setMsg] = useState("")
+  const { decrypt, ready } = useEncryption(chat.participant_username)
+  useEffect(() => {
+    async function decryptLastMsg() {
+      setMsg(await decrypt(JSON.parse(chat.last_message)))
+    }
+    decryptLastMsg()
+  }, [ready])
+  console.log(msg)
   return (
     <div
       onClick={onClick}
@@ -12,7 +24,7 @@ export default function ChatListItem({ chat, onClick, isActive = false }) {
         </div>
 
         <div className="flex items-start justify-between gap-2">
-          <p className="truncate text-sm text-gray-400">{chat.last_message}</p>
+          <p className="truncate text-sm text-gray-400">{msg}</p>
 
           {/* {chat.unread  && (
             <div className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white px-1">
