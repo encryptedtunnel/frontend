@@ -38,7 +38,6 @@ export const useChats = (conversationId, myId, encrypt, decrypt, ready) => {
 
     socketRef.current.onmessage = async (event) => {
       const newMessage = JSON.parse(event.data);
-      console.log(JSON.parse(newMessage.content))
       const plaintext = await decrypt(JSON.parse(newMessage.content));
       setMessages((prev) => [...prev, {...newMessage, content: plaintext}]);
     };
