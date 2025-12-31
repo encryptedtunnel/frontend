@@ -8,6 +8,7 @@ import PrimaryButton from "../components/PrimaryButton";
 import { z } from "zod"
 import { ToastContainer, toast } from "react-toastify";
 import authService from "../services/authService";
+import CryptoService from "../services/cryptoService";
 
 const SignupSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters long").nonempty(),
@@ -33,6 +34,7 @@ export default function SignUp() {
     resolver: zodResolver(SignupSchema)
   })
 
+
   const navigate = useNavigate();
   const toastConfig = {
     position: "bottom-center",
@@ -48,9 +50,10 @@ export default function SignUp() {
   }
 
   const onSubmit = async (data) => {
-      const result = await authService.signup(data.username, data.display_name, data.password)
+      const publicKey = await CryptoService.initKeys()
+      const result = await authService.signup(data.username, data.display_name, data.password, publicKey)
       if (result.success){
-        toast("Signed in", { ...toastConfig, type: "success" });
+        toast("Signed up", { ...toastConfig, type: "success" });
         setTimeout(() => { navigate("/login") }, 2000)
       } else{
         toast(result.message, toastConfig);

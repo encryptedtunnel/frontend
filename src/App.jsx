@@ -3,6 +3,7 @@ import Welcome from "./pages/Welcome";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import Inbox from "./pages/Inbox";
+import CheckAuth from "./components/CheckAuth";
 
 function App() {
   return (
@@ -11,8 +12,8 @@ function App() {
         <Route path="/" element={<Welcome />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/inbox" element={<Inbox />}/>
-        <Route path="/chat/:id" element={<Inbox />}/>
+        <Route path="/dashboard" element={<CheckAuth><Inbox /></CheckAuth>} />
+        {/* <Route path="/dashboard/:id" element={<CheckAuth><Inbox /></CheckAuth>} /> */}
       </Routes>
     </BrowserRouter>
   );

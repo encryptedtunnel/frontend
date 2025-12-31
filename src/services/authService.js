@@ -119,12 +119,13 @@ class AuthService {
     return decoded.exp > now;
   }
 
-  async signup(username, display_name, password) {
+  async signup(username, display_name, password, pubKey) {
     try {
       const response = await apiClient.post("/auth/register", {
         username,
         display_name,
         password,
+        pubKey,
       });
 
       return {
@@ -160,6 +161,43 @@ class AuthService {
       };
     }
   }
+  async fetchPK(username){
+    try {
+      const response = await apiClient.get(`/auth/user/${username}/pubKey`)
+      return {
+        success: true,
+        status: response.status,
+        data: response.data,
+      };
+    } catch (error) {
+      if (!error.response) {
+        return {
+          success: false,
+          status: null,
+          message: "Network error. Please check your connection.",
+        };
+      }
+
+      const { status, data } = error.response;
+
+      if (status === 404) {
+        return {
+          success: false,
+          status: 404,
+          message: "user not found",
+          details: data,
+        };
+      }
+
+      return {
+        success: false,
+        status,
+        message: data?.message || "An error occurred.",
+        details: data,
+      };
+
+    }
+  }
 
   _setToken(token) {
     localStorage.setItem(this.TOKEN_KEY, token);
@@ -167,6 +205,13 @@ class AuthService {
 
   getToken() {
     return localStorage.getItem(this.TOKEN_KEY);
+  }
+  meo(){
+    const token = this.getToken();
+    if (!token) return false;
+
+    const decoded = this._decodeToken(token);
+    return decoded
   }
 }
 
