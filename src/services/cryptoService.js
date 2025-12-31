@@ -104,7 +104,7 @@ class CryptoService {
 
       return {
         msg: new TextDecoder().decode(decrypted),
-        succuss: true,
+        success: true,
         detail: null
       }
     } catch (error) {
