@@ -1,67 +1,79 @@
-export default function NewChat({ onBack }) {
+import { useState } from "react";
+
+export default function NewChat({ onCreateChat }) {
+  const [userId, setUserId] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleNext = () => {
+    if (!userId.trim() || !message.trim()) return;
+    onCreateChat(userId.trim(), message.trim());
+  };
+
   return (
-    <div className="flex flex-col h-full w-full bg-bg-dark text-white overflow-x-hidden">
-
-      <header className="flex items-center justify-between px-4 py-3 border-b border-white/10 shrink-0">
+    <div className="flex flex-col h-full bg-bg-dark text-white">
+      
+      <div className="flex items-center justify-between p-4 border-b border-white/10">
+        <h2 className="text-lg font-bold">New Message</h2>
         <button
-          className="md:hidden text-primary flex items-center"
-          onClick={onBack}
+          onClick={handleNext}
+          className="text-primary font-semibold"
         >
-          <span className="material-symbols-outlined">
-            arrow_back_ios_new
-          </span>
-        </button>
-
-        <h1 className="text-lg font-bold">New Message</h1>
-
-        <button className="text-primary font-semibold">
           Next
         </button>
-      </header>
+      </div>
 
-      <div className="px-4 py-3 border-b border-white/10">
-        <div className="flex items-center gap-3">
-          <span className="text-gray-400">To:</span>
-          <input
-            className="
-              flex-1
-              bg-transparent
-              outline-none
-              text-white
-              placeholder-gray-500
-            "
-            placeholder="Enter name, phone, or ID"
-          />
-        </div>
+      <div className="p-4 border-b border-white/10">
+        <input
+          className="w-full bg-transparent outline-none text-white"
+          placeholder="Enter user ID"
+          value={userId}
+          onChange={(e) => setUserId(e.target.value)}
+        />
       </div>
 
       <div className="flex-1" />
 
-      <footer className="p-3 border-t border-white/10 flex items-center gap-2 shrink-0">
-        <input
-          className="
-            flex-1
-            rounded-full
-            px-4 py-2
-            bg-white/10
-            text-white
-            outline-none
-            focus:ring-2 focus:ring-primary
-          "
-          placeholder="Type a message..."
-        />
+      <footer className="sticky bottom-0 w-full bg-bg-dark border-t border-white/10 px-3 py-2">
+  <div className="flex items-center gap-2">
 
-        <button
-          className="
-            w-12 h-12
-            rounded-full
-            bg-primary
-            flex items-center justify-center
-          "
-        >
-          <span className="material-symbols-outlined">send</span>
-        </button>
-      </footer>
+    <input
+      className="
+        flex-1
+        rounded-full
+        px-4
+        py-2
+        bg-white/10
+        text-white
+        outline-none
+        focus:ring-2
+        focus:ring-primary
+      "
+      placeholder="Type first message..."
+      value={message}
+      onChange={(e) => setMessage(e.target.value)}
+      onKeyDown={(e) => e.key === 'Enter' && handleNext()}
+    />
+
+    <button
+      onClick={handleNext}
+      className="
+        w-11
+        h-11
+        min-w-[44px]
+        rounded-full
+        bg-primary
+        flex
+        items-center
+        justify-center
+      "
+    >
+      <span className="material-symbols-outlined text-white">
+        send
+      </span>
+    </button>
+
+  </div>
+</footer>
     </div>
   );
 }
