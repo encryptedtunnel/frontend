@@ -1,4 +1,5 @@
 import { get, set } from "idb-keyval";
+import { success } from "zod";
 
 class CryptoService {
   static PRIVATE_KEY_ID = "ecdh_private_key";
@@ -88,19 +89,32 @@ class CryptoService {
     };
   }
   static async decryptMessage(sharedKey, payload) {
-    const iv = new Uint8Array(payload.iv);
-    const data = new Uint8Array(payload.data);
+    try {
+      const iv = new Uint8Array(payload.iv);
+      const data = new Uint8Array(payload.data);
 
-    const decrypted = await crypto.subtle.decrypt(
-      {
-        name: "AES-GCM",
-        iv,
-      },
-      sharedKey,
-      data
-    );
+      const decrypted = await crypto.subtle.decrypt(
+        {
+          name: "AES-GCM",
+          iv,
+        },
+        sharedKey,
+        data
+      );
 
-    return new TextDecoder().decode(decrypted);
+      return {
+        msg: new TextDecoder().decode(decrypted),
+        succuss: true,
+        detail: null
+      }
+    } catch (error) {
+      console.log(error)
+      return {
+        msg: null,
+        success: false,
+        detail: error
+      }
+    }
   }
 }
 
