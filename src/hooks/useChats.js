@@ -43,8 +43,14 @@ export const useChats = (conversationId, myId, encrypt, decrypt, ready) => {
 
     socketRef.current.onmessage = async (event) => {
       const newMessage = JSON.parse(event.data);
-      const plaintext = await decrypt(JSON.parse(newMessage.content));
-      setMessages((prev) => [...prev, { ...newMessage, content: plaintext }]);
+      const result = await decrypt(JSON.parse(newMessage.content));
+      if (result.success){
+        setMessages((prev) => [...prev, { ...newMessage, content: result.msg }]);
+      }
+      else{
+        setMessages((prev) => [...prev, { ...newMessage, content: "[Failed to decode]" }]);
+      }
+
     };
 
     socketRef.current.onopen = () => console.log("WebSocket connected");
