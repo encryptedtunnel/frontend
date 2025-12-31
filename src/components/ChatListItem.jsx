@@ -11,7 +11,6 @@ export default function ChatListItem({ chat, onClick, isActive = false }) {
     }
     decryptLastMsg()
   }, [ready])
-  console.log(msg)
   return (
     <div
       onClick={onClick}
