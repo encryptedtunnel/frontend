@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import authService from "../services/authService";
 import { useNavigate } from "react-router-dom";
 
-const CheckAuth = () => {
+const CheckAuth = ({children}) => {
   const nav = useNavigate();
 
   useEffect(() => {
@@ -14,7 +14,7 @@ const CheckAuth = () => {
     }
     checkAuth();
   }, [nav]);
-  return <div></div>;
+  return children;
 };
 
 export default CheckAuth;
