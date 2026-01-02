@@ -1,9 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import NewChatService from "../services/newChatService";
+import { ToastContainer, toast } from "react-toastify";
+import conversationService from "../services/conversationService";
 
-export default function NewChat({ onCreated }) {
+export default function NewChat({ setConversation }) {
   const nav = useNavigate();
+  const toastConfig = {
+    position: "bottom-center",
+    theme: "dark",
+    type: "error",
+  }
 
   const [Username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
@@ -12,26 +18,17 @@ export default function NewChat({ onCreated }) {
 
   const handleNext = async () => {
     if (!canSubmit || loading) return;
-
-    try {
-      setLoading(true);
-
-      const conversation = await NewChatService.createConversation(
-        Username
-      );
-
-      if (onCreated) {
-        await onCreated();
-      }
-
-      nav(`/chat/${conversation.id}`);
-    } catch (err) {
-      alert(err.message || "Failed to create chat");
-    } finally {
-      setLoading(false);
+    setLoading(true);
+    const result = await conversationService.createConversation(Username);
+    if (!result.success) {
+      toast(result.message, toastConfig);
     }
-  };
-
+    else {
+      toast("Created", { ...toastConfig, type: "success" })
+      setConversation(result.data)
+    };
+    setLoading(false);
+  }
   return (
     <div className="flex flex-col flex-1 w-full h-full bg-bg-dark text-white">
       <div className="flex items-center p-4 border-b border-white/10 justify-between w-full">
@@ -51,9 +48,8 @@ export default function NewChat({ onCreated }) {
         <button
           onClick={handleNext}
           disabled={!canSubmit}
-          className={`font-bold ${
-            canSubmit ? "text-primary" : "text-primary/40"
-          }`}
+          className={`font-bold ${canSubmit ? "text-primary" : "text-primary/40"
+            }`}
         >
           Next
         </button>
@@ -73,6 +69,8 @@ export default function NewChat({ onCreated }) {
       </div>
 
       <div className="flex-1 w-full" />
+      <ToastContainer draggable />
+
     </div>
   );
 }

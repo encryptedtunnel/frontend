@@ -5,9 +5,9 @@ import useEncryption from "../hooks/useEncryption";
 import NewChat from "./NewChat";
 
 const ChatWindow = ({ conversation, setConversation }) => {
-   if (!conversation) {
-        return  <NewChat />
-}
+    if (!conversation) {
+        return <NewChat setConversation={setConversation} />
+    }
 
 
     const [message, setMessage] = useState("");
