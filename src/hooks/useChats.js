@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import chatService from "../services/chatService";
+import authService from "../services/authService";
 
-export const useChats = (conversationId, myId, encrypt, decrypt, ready) => {
+export const useChats = (conversationId, encrypt, decrypt, ready) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -34,11 +35,11 @@ export const useChats = (conversationId, myId, encrypt, decrypt, ready) => {
 
   // Connect WebSocket
   useEffect(() => {
-    if (!conversationId || !myId || !ready) return;
+    if (!conversationId || !ready) return;
+    const token = authService.getToken()
     socketRef.current = new WebSocket(
-      `${
-        import.meta.env.VITE_API_BASE_URL_WS
-      }/chat/ws/${conversationId}/${myId}`
+      `${import.meta.env.VITE_API_BASE_URL_WS}/chat/ws/${conversationId}`,
+      [token]
     );
 
     socketRef.current.onmessage = async (event) => {
@@ -58,7 +59,7 @@ export const useChats = (conversationId, myId, encrypt, decrypt, ready) => {
     socketRef.current.onclose = () => console.log("WebSocket closed");
 
     return () => socketRef.current?.close();
-  }, [conversationId, myId, ready]);
+  }, [conversationId, ready]);
 
   const sendMessage = async (content) => {
     if (!content.trim()) return;

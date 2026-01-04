@@ -2,26 +2,20 @@ import { useState, useRef, useEffect } from "react";
 import { useChats } from "../hooks/useChats";
 import authService from "../services/authService";
 import useEncryption from "../hooks/useEncryption";
+import NewChat from "./NewChat";
 
 const ChatWindow = ({ conversation, setConversation }) => {
     if (!conversation) {
-        return (
-            <main className={`flex-1 flex flex-col ${conversation ? "flex" : "hidden md:flex"}`}>
-                <div className="flex items-center justify-center h-full text-gray-500">
-                    Select a chat to start messaging
-                </div>
-            </main>
-
-
-        )
+        return <NewChat setConversation={setConversation} />
     }
+
 
     const [message, setMessage] = useState("");
     const myId = authService.meo()["sub"];
     const bottomRef = useRef(null);
 
     const { encrypt, decrypt, ready } = useEncryption(conversation.participant_username)
-    const { messages, loading, error, sendMessage } = useChats(conversation.id, myId, encrypt, decrypt, ready);
+    const { messages, loading, error, sendMessage } = useChats(conversation.id, encrypt, decrypt, ready);
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
