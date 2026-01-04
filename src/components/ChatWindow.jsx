@@ -15,7 +15,7 @@ const ChatWindow = ({ conversation, setConversation }) => {
     const bottomRef = useRef(null);
 
     const { encrypt, decrypt, ready } = useEncryption(conversation.participant_username)
-    const { messages, loading, error, sendMessage } = useChats(conversation.id, myId, encrypt, decrypt, ready);
+    const { messages, loading, error, sendMessage } = useChats(conversation.id, encrypt, decrypt, ready);
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
