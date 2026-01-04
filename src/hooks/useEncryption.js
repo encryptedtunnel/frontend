@@ -1,32 +1,32 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CryptoService from "../services/cryptoService";
 import authService from "../services/authService";
 
 const useEncryption = (participant_username) => {
-  const [sharedKey, setSharedKey] = useState();
+  const sharedKey = useRef()
   const [ready, setReady] = useState(false);
   const setupSharedKey = async () => {
     if (!participant_username) return;
     const result = await authService.fetchPK(participant_username);
     const otherPubKey = JSON.parse(result.data);
-    setSharedKey(await CryptoService.deriveSharedKey(otherPubKey));
+    sharedKey.current = (await CryptoService.deriveSharedKey(otherPubKey));
     setReady(true);
   };
 
   const encrypt = async (msg) => {
     
-    if (!sharedKey) {
+    if (!sharedKey.current) {
       await setupSharedKey()
     };
-    return CryptoService.encryptMessage(sharedKey, msg);
+    return CryptoService.encryptMessage(sharedKey.current, msg);
   };
 
   const decrypt = async (cipher) => {
 
-    if (!sharedKey){ 
+    if (!sharedKey.current){ 
       await setupSharedKey()
     }
-    return CryptoService.decryptMessage(sharedKey, cipher);
+    return CryptoService.decryptMessage(sharedKey.current, cipher);
   };
   useEffect(() => {
     setupSharedKey()    
